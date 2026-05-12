@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pequeños Tiempos — Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber-50: #FEF3E2; --amber-100: #FDE68A; --amber-200: #F59E0B;
+    --amber-600: #92400E; --amber-700: #78350F; --amber-900: #451A03;
+    --teal-50: #ECFDF5; --teal-400: #34D399; --teal-600: #059669; --teal-800: #065F46;
+    --coral-50: #FFF1F0; --coral-600: #DC2626; --coral-800: #991B1B;
+    --blue-50: #EFF6FF; --blue-600: #2563EB; --blue-800: #1E40AF;
+    --bg: #FFFBF5;
+    --bg-card: #FFFFFF;
+    --bg-secondary: #F9F5EE;
+    --text-primary: #1C1917;
+    --text-secondary: #57534E;
+    --text-tertiary: #A8A29E;
+    --border: rgba(0,0,0,0.08);
+    --border-med: rgba(0,0,0,0.12);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* TOP HEADER */
+  .top-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--amber-50);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+
+  .brand-text .name {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .brand-text .sub {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+
+  .header-badge {
+    background: var(--amber-50);
+    color: var(--amber-600);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(245,158,11,0.2);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    transition: color .2s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+
+  .nav-btn .icon { font-size: 20px; line-height: 1; }
+
+  .nav-btn.active {
+    color: var(--amber-600);
+  }
+
+  .nav-btn.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: var(--amber-200);
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 16px 16px calc(72px + env(safe-area-inset-bottom));
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .page-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* METRIC GRID */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .metric {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .metric-label {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .metric-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin: 18px 0 8px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-highlight {
+    background: linear-gradient(135deg, #FFFBF5 0%, #FEF3E2 100%);
+    border-color: rgba(245,158,11,0.2);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* PROGRESS */
+  .prog-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+  }
+  .prog-label { font-size: 12px; color: var(--text-secondary); min-width: 130px; }
+  .prog-bar-bg { flex: 1; height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
+  .prog-bar { height: 100%; border-radius: 3px; background: var(--amber-200); }
+  .prog-pct { font-size: 11px; color: var(--text-tertiary); min-width: 30px; text-align: right; font-weight: 700; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .ci { color: var(--teal-600); flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+  .wi { color: var(--amber-200); flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+
+  /* STEPS */
+  .step { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--amber-50); color: var(--amber-600);
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+  .step-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* BADGES */
+  .badge {
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px; display: inline-block;
+  }
+  .b-amber { background: var(--amber-50); color: var(--amber-600); }
+  .b-teal { background: var(--teal-50); color: var(--teal-800); }
+  .b-blue { background: var(--blue-50); color: var(--blue-800); }
+  .b-gray { background: var(--bg-secondary); color: var(--text-secondary); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+
+  /* ML MOCKUP */
+  .ml-mockup {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ml-header {
+    background: var(--amber-50);
+    padding: 9px 16px;
+    font-size: 11px; font-weight: 700; color: var(--amber-600);
+    border-bottom: 1px solid rgba(245,158,11,0.15);
+  }
+  .ml-body { padding: 14px 16px; }
+  .ml-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; line-height: 1.4; }
+  .ml-price { font-size: 26px; font-weight: 700; color: var(--teal-600); margin-bottom: 8px; font-family: 'Lora', serif; }
+  .ml-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
+
+  /* FOTO GRID */
+  .foto-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .foto-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .foto-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--amber-50); color: var(--amber-600);
+    font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 7px;
+    border: 1px solid rgba(245,158,11,0.2);
+  }
+  .foto-label { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+  .foto-label strong { color: var(--text-primary); display: block; margin-bottom: 2px; font-size: 11px; }
+
+  /* KW GRID */
+  .kw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
+  .kw-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 11px; color: var(--text-secondary);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .kw-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal-600); flex-shrink: 0; }
+
+  /* COMISION */
+  .com-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .com-row:last-child { border-bottom: none; font-weight: 700; color: var(--text-primary); font-size: 14px; }
+  .text-green { color: var(--teal-600); font-weight: 700; }
+  .text-red { color: var(--coral-600); font-weight: 600; }
+
+  /* IG POSTS */
+  .ig-post {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ig-num { font-size: 10px; font-weight: 800; color: var(--text-tertiary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .06em; }
+  .ig-copy { font-size: 13px; color: var(--text-primary); line-height: 1.6; margin-bottom: 6px; font-style: italic; }
+  .ig-tags { font-size: 11px; color: var(--blue-600); }
+
+  /* ROW 2 */
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+</style>
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<header class="top-header">
+  <div class="header-brand">
+    <div class="brand-icon">🕐</div>
+    <div class="brand-text">
+      <div class="name">Pequeños Tiempos</div>
+      <div class="sub">Panel del proyecto · Mayo 2026</div>
+    </div>
+  </div>
+  <div class="header-badge">V2 Prototipo</div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ESTADO -->
+  <section id="page-estado" class="page active">
+    <div class="page-header">
+      <div class="page-title">Estado actual</div>
+      <div class="page-sub">Prototipo V2 casi listo · 2 personas convencidas</div>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="metric-label">Costo unitario</div>
+        <div class="metric-value">$45K</div>
+        <div class="metric-sub">A optimizar</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Precio venta</div>
+        <div class="metric-value">$70K</div>
+        <div class="metric-sub">Objetivo MVP</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Margen neto ML</div>
+        <div class="metric-value">$13K</div>
+        <div class="metric-sub">Por unidad</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Lote inicial</div>
+        <div class="metric-value">15 u.</div>
+        <div class="metric-sub">Para validar</div>
+      </div>
+    </div>
+
+    <div class="section-label">Progreso del proyecto</div>
+    <div class="card">
+      <div class="prog-row"><span class="prog-label">Idea y concepto</span><div class="prog-bar-bg"><div class="prog-bar" style="width:100%"></div></div><span class="prog-pct">100%</span></div>
+      <div class="prog-row"><span class="prog-label">Prototipo físico</span><div class="prog-bar-bg"><div class="prog-bar" style="width:80%"></div></div><span class="prog-pct">80%</span></div>
+      <div class="prog-row"><span class="prog-label">Diseño / branding</span><div class="prog-bar-bg"><div class="prog-bar" style="width:40%"></div></div><span class="prog-pct">40%</span></div>
+      <div class="prog-row"><span class="prog-label">Producción lote 1</span><div class="prog-bar-bg"><div class="prog-bar" style="width:10%"></div></div><span class="prog-pct">10%</span></div>
+      <div class="prog-row"><span class="prog-label">Mercado Libre</span><div class="prog-bar-bg"><div class="prog-bar" style="width:0%"></div></div><span class="prog-pct">0%</span></div>
+      <div class="prog-row"><span class="prog-label">Instagram</span><div class="prog-bar-bg"><div class="prog-bar" style="width:0%"></div></div><span class="prog-pct">0%</span></div>
+    </div>
+
+    <div class="section-label">Lo que ya tenés resuelto ✓</div>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="ci">✓</span> Concepto validado — reloj real + rutina + Montessori sin pantallas</li>
+        <li><span class="ci">✓</span> Dos prototipos físicos construidos</li>
+        <li><span class="ci">✓</span> Materiales definidos: MDF, lámina imantada, mecanismo de reloj</li>
+        <li><span class="ci">✓</span> Ilustraciones para nena, nene y unisex con IA</li>
+        <li><span class="ci">✓</span> Imprenta de barrio disponible como proveedor</li>
+        <li><span class="ci">✓</span> 2 personas con interés real en el proyecto</li>
+        <li><span class="ci">✓</span> Nombre de marca definido: Pequeños Tiempos</li>
+      </ul>
+    </div>
+
+    <div class="section-label">Pendiente antes de producir !</div>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="wi">!</span> Reimprimir círculo "baño" — escrito a mano</li>
+        <li><span class="wi">!</span> Resolver vinilo con burbujas → papel foto laminado mate</li>
+        <li><span class="wi">!</span> Diseñar agujas infantiles en MDF 3mm</li>
+        <li><span class="wi">!</span> Exportar diseño del tablero a PDF 300 DPI</li>
+        <li><span class="wi">!</span> Reducir tamaño de 34cm a 30cm en próximo lote</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRODUCTO -->
+  <section id="page-producto" class="page">
+    <div class="page-header">
+      <div class="page-title">El producto</div>
+      <div class="page-sub">Reloj de rutinas · Estilo Montessori · Sin pantallas</div>
+    </div>
+
+    <div class="card card-highlight">
+      <div class="card-title">🕐 Reloj de Rutinas Pequeños Tiempos</div>
+      <div class="card-body">Reloj de pared funcional en MDF 30cm con mecanismo real. El chico organiza su día moviendo círculos imantados con ilustraciones. Sin pantallas, sin app.</div>
+      <div class="tag-row">
+        <span class="badge b-teal">Estilo Montessori</span>
+        <span class="badge b-amber">3 a 7 años</span>
+        <span class="badge b-teal">Sin pantallas</span>
+        <span class="badge b-gray">Educativo</span>
+        <span class="badge b-gray">Hecho a mano</span>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="card">
+        <div class="card-title">Tablero</div>
+        <div class="card-body" style="font-size:12px">MDF 30cm · mecanismo reloj · degradé día/noche · agujas infantiles MDF 3mm (pendiente)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">10 actividades</div>
+        <div class="card-body" style="font-size:12px">Círculos 5cm · ilustración impresa · lámina imantada · despertar · desayuno · vestirse · colegio · almuerzo · deporte · jugar · baño · cena · dormir</div>
+      </div>
+    </div>
+
+    <div class="section-label">Diferenciadores</div>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="ci">✓</span> Reloj real que funciona — aprende la hora mientras sigue su rutina</li>
+        <li><span class="ci">✓</span> Sin pantallas — argumento único en el segmento Montessori</li>
+        <li><span class="ci">✓</span> El chico toca y mueve — no mira pasivamente</li>
+        <li><span class="ci">✓</span> Organiza el tiempo del día, no los días de la semana</li>
+        <li><span class="ci">✓</span> Materiales naturales: madera + imanes — estética cálida</li>
+      </ul>
+    </div>
+
+    <div class="section-label">Versión futura (no ahora)</div>
+    <div class="card">
+      <div class="card-body">Packs temáticos · nombre grabado a láser · zona de reward · packaging caja ventana · versión TEA/terapias.</div>
+    </div>
+  </section>
+
+  <!-- COSTOS -->
+  <section id="page-costos" class="page">
+    <div class="page-header">
+      <div class="page-title">Costos y márgenes</div>
+      <div class="page-sub">Estimados para lote inicial de 15 unidades</div>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="metric-label">Costo materiales</div>
+        <div class="metric-value">$45K</div>
+        <div class="metric-sub">Estimado actual</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Precio venta MVP</div>
+        <div class="metric-value">$70K</div>
+        <div class="metric-sub">Margen 36%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Precio premium</div>
+        <div class="metric-value">$85K</div>
+        <div class="metric-sub">Con branding</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Objetivo costo</div>
+        <div class="metric-value">$35K</div>
+        <div class="metric-sub">Optimizando lote</div>
+      </div>
+    </div>
+
+    <div class="section-label">Desglose de materiales por unidad</div>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="ci">→</span> MDF 30cm para tablero (carpintería o fablab)</li>
+        <li><span class="ci">→</span> MDF 5cm × 10 círculos de actividad</li>
+        <li><span class="ci">→</span> Lámina imantada autoadhesiva (tablero + círculos)</li>
+        <li><span class="ci">→</span> Mecanismo de reloj + pila AA</li>
+        <li><span class="ci">→</span> Impresión papel foto laminado mate</li>
+        <li><span class="ci">→</span> Barniz acrílico mate (terminación)</li>
+        <li><span class="ci">→</span> Gancho de colgar</li>
+        <li><span class="ci">→</span> Packaging: bolsa kraft + sticker de marca</li>
+      </ul>
+    </div>
+
+    <div class="section-label">Regla de oro</div>
+    <div class="card card-highlight">
+      <div class="card-body">El costo de materiales no debería superar el <strong>35% del precio de venta</strong>. Si bajás el costo a $35K, el precio de $85K-90K queda perfectamente justificado con el diferencial Montessori.</div>
+    </div>
+
+    <div class="section-label">Herramientas ya amortizadas</div>
+    <div class="card">
+      <div class="card-body">Cúter circular $12.000 · Adhesivo UHU spray $26.900 — ya invertidos en el prototipo, no se suman al costo por unidad.</div>
+    </div>
+  </section>
+
+  <!-- MERCADO LIBRE -->
+  <section id="page-ml" class="page">
+    <div class="page-header">
+      <div class="page-title">🛒 Mercado Libre</div>
+      <div class="page-sub">Canal principal de ventas</div>
+    </div>
+
+    <div class="ml-mockup">
+      <div class="ml-header">🛒 Vista previa de publicación</div>
+      <div class="ml-body">
+        <div class="ml-title">Reloj de Rutinas Infantil Montessori — Tablero Magnético Educativo Sin Pantallas 3 a 7 Años</div>
+        <div class="ml-price">$70.000</div>
+        <div class="tag-row" style="margin-bottom:8px">
+          <span class="badge b-teal">Nuevo</span>
+          <span class="badge b-amber">Hecho a mano</span>
+          <span class="badge b-blue">Envío disponible</span>
+        </div>
+        <div class="ml-desc">
+          <strong>¿Tu hijo no sigue la rutina solo?</strong><br>
+          El Reloj de Rutinas Pequeños Tiempos organiza el día de tu hijo de forma visual y autónoma. Sin pantallas, sin apps.<br><br>
+          <strong>Incluye:</strong> Tablero reloj MDF 30cm + 10 círculos imantados ilustrados<br>
+          Actividades: despertar · desayuno · vestirse · colegio · almuerzo · deporte · jugar · baño · cena · dormir<br><br>
+          <strong>Ideal para:</strong> rutinas difíciles · regalo cumpleaños · inicio escolar · crianza sin pantallas
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Las 6 fotos que necesitás</div>
+    <div class="foto-grid">
+      <div class="foto-card"><div class="foto-num">1</div><div class="foto-label"><strong>Principal</strong>Reloj completo, fondo blanco</div></div>
+      <div class="foto-card"><div class="foto-num">2</div><div class="foto-label"><strong>En uso</strong>Manos del chico moviendo una pieza</div></div>
+      <div class="foto-card"><div class="foto-num">3</div><div class="foto-label"><strong>Detalle</strong>Primer plano de los círculos</div></div>
+      <div class="foto-card"><div class="foto-num">4</div><div class="foto-label"><strong>Escala</strong>Reloj colgado con referencia</div></div>
+      <div class="foto-card"><div class="foto-num">5</div><div class="foto-label"><strong>Contenido</strong>Tablero + 10 círculos desplegados</div></div>
+      <div class="foto-card"><div class="foto-num">6</div><div class="foto-label"><strong>Lifestyle</strong>En cuarto real, luz natural</div></div>
+    </div>
+
+    <div class="section-label">Palabras clave</div>
+    <div class="kw-grid">
+      <div class="kw-item"><div class="kw-dot"></div>reloj rutinas infantil</div>
+      <div class="kw-item"><div class="kw-dot"></div>tablero rutinas montessori</div>
+      <div class="kw-item"><div class="kw-dot"></div>agenda visual niños</div>
+      <div class="kw-item"><div class="kw-dot"></div>juego educativo 3 años</div>
+      <div class="kw-item"><div class="kw-dot"></div>rutinas niños sin pantallas</div>
+      <div class="kw-item"><div class="kw-dot"></div>reloj educativo madera</div>
+      <div class="kw-item"><div class="kw-dot"></div>tablero magnético infantil</div>
+      <div class="kw-item"><div class="kw-dot"></div>regalo niño 4 años</div>
+    </div>
+
+    <div class="section-label">Números reales ML</div>
+    <div class="card">
+      <div class="com-row"><span>Precio de venta</span><span class="text-green">$70.000</span></div>
+      <div class="com-row"><span>Comisión ML (~13%)</span><span class="text-red">−$9.100</span></div>
+      <div class="com-row"><span>Costo envío (Mercado Envíos)</span><span class="text-red">−$2.500</span></div>
+      <div class="com-row"><span>Costo materiales</span><span class="text-red">−$45.000</span></div>
+      <div class="com-row"><span>Ganancia neta estimada</span><span class="text-green">≈$13.400</span></div>
+    </div>
+
+    <div class="section-label">Proceso de venta</div>
+    <div class="card">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Compra en ML</div><div class="step-desc">Recibís notificación. Tenés 24-48hs para confirmar y preparar el envío.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Empaquetar</div><div class="step-desc">Bolsa kraft protegida, círculos en bolsita separada, tarjetita de instrucciones adentro.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Etiqueta Mercado Envíos</div><div class="step-desc">ML la genera automáticamente. Imprimís y llevás al punto de entrega más cercano en CABA.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">El comprador califica</div><div class="step-desc">Pedí calificación por mensaje interno. Las primeras reseñas son oro.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div><div class="step-title">ML te acredita el dinero</div><div class="step-desc">Entre 7 y 21 días. Al inicio es más lento, después se acelera.</div></div></div>
+    </div>
+
+    <div class="section-label">Antes de publicar, verificá</div>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="ci">✓</span> Cuenta ML verificada con DNI y CBU</li>
+        <li><span class="ci">✓</span> Al menos 6 fotos cargadas</li>
+        <li><span class="ci">✓</span> Mínimo 3 unidades listas antes de publicar</li>
+        <li><span class="wi">!</span> No publicar con el círculo de baño escrito a mano</li>
+        <li><span class="ci">✓</span> Precio con envío aclarado</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section id="page-ig" class="page">
+    <div class="page-header">
+      <div class="page-title">📸 Instagram</div>
+      <div class="page-sub">Canal secundario · Construir confianza</div>
+    </div>
+
+    <div class="card card-highlight">
+      <div class="card-body">Instagram no es para vender ahora — es para construir confianza. Las primeras ventas vienen de ML. <strong>No abrir la cuenta hasta tener al menos 3 posts listos.</strong></div>
+    </div>
+
+    <div class="section-label">Bio sugerida</div>
+    <div class="card">
+      <div class="card-body" style="font-family:'Lora',serif;font-size:13px;line-height:1.9">
+        🕐 Rutinas infantiles sin pantallas<br>
+        Reloj magnético Montessori · Hecho en CABA<br>
+        Para chicos de 3 a 7 años<br>
+        ↓ Disponible en Mercado Libre
+      </div>
+    </div>
+
+    <div class="section-label">Primeras 6 publicaciones</div>
+
+    <div class="ig-post">
+      <div class="ig-num">Post 1 — Presentación</div>
+      <div class="ig-copy">"Detrás de cada mañana tranquila, hay una rutina que el chico entiende solo. Hola, somos Pequeños Tiempos 🕐"</div>
+      <div class="ig-tags">#rutinasinfantiles #Montessori #sinpantallas #crianzarespetuosa</div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-num">Post 2 — El problema</div>
+      <div class="ig-copy">"¿Cuántas veces repetís lo mismo cada mañana? Vestite. Desayuná. Cepillate. Ya va." — Video corto del reloj en uso real.</div>
+      <div class="ig-tags">#rutinasinfantiles #autonomiainfantil #maternidad</div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-num">Post 3 — El producto en detalle</div>
+      <div class="ig-copy">Carrusel: el tablero, los círculos, cómo el chico los mueve solo. Foto real, buena luz natural.</div>
+      <div class="ig-tags">#juegoMontessori #relojeducativo #desarrolloinfantil</div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-num">Post 4 — Testimonio real</div>
+      <div class="ig-copy">Foto de un chico usando el reloj en casa real. "Ya sabe a qué hora es cada actividad sin que se lo recordemos."</div>
+      <div class="ig-tags">#testimonio #crianzasinpantallas #autonomia</div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-num">Post 5 — Detrás de escena</div>
+      <div class="ig-copy">Cómo se hace el reloj. Fotos del proceso: el MDF, las piezas, el armado. Genera confianza y diferencia de un producto importado.</div>
+      <div class="ig-tags">#hechoamano #emprendimiento #MadeInArgentina</div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-num">Post 6 — Llamada a la acción</div>
+      <div class="ig-copy">"Primeras unidades disponibles. Link en bio para hacer el tuyo."</div>
+      <div class="ig-tags">#pequeñostiempos #disponible #regalo</div>
+    </div>
+  </section>
+
+  <!-- PROXIMOS PASOS -->
+  <section id="page-pasos" class="page">
+    <div class="page-header">
+      <div class="page-title">Próximos pasos</div>
+      <div class="page-sub">Esta semana → 3 semanas → 45 días</div>
+    </div>
+
+    <div class="section-label">Esta semana</div>
+    <div class="card">
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Reimprimir el círculo de "baño"</div><div class="step-desc">Con la imprenta de barrio. Es el cambio más rápido y barato que podés hacer hoy.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Probar papel foto laminado</div><div class="step-desc">Pedí una prueba del tablero en papel foto con laminado mate. Es tu solución al problema de burbujas.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Dar 1 prototipo a una familia</div><div class="step-desc">Sin explicarles nada. Observá cómo lo usa el chico. Pedí feedback en 3-4 días.</div></div></div>
+    </div>
+
+    <div class="section-label">Próximas 2-3 semanas</div>
+    <div class="card">
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">Cerrar el diseño final del tablero</div><div class="step-desc">Exportar desde Canva a PDF 300 DPI. Prueba de impresión antes del lote.</div></div></div>
+      <div class="step"><div class="step-num">5</div><div><div class="step-title">Diseñar agujas infantiles</div><div class="step-desc">Dibujá la forma en papel → fotografiá → carpintería o fablab para corte en MDF 3mm.</div></div></div>
+      <div class="step"><div class="step-num">6</div><div><div class="step-title">Producir lote inicial de 15 unidades</div><div class="step-desc">Con diseño cerrado. Objetivo: costo por unidad menor a $40K.</div></div></div>
+    </div>
+
+    <div class="section-label">En 30-45 días</div>
+    <div class="card">
+      <div class="step"><div class="step-num">7</div><div><div class="step-title">Publicar en Mercado Libre</div><div class="step-desc">Con las 6 fotos del producto terminado. Precio de lanzamiento $70K.</div></div></div>
+      <div class="step"><div class="step-num">8</div><div><div class="step-title">Abrir Instagram Pequeños Tiempos</div><div class="step-desc">Con los primeros 3 posts ya preparados. No abrir una cuenta vacía.</div></div></div>
+      <div class="step"><div class="step-num">9</div><div><div class="step-title">Primera venta real</div><div class="step-desc">Objetivo concreto: vender las primeras 3 unidades y aprender el proceso completo.</div></div></div>
+    </div>
+
+    <div class="section-label">La regla más importante</div>
+    <div class="card card-highlight">
+      <div class="card-body">La idea ya está validada. El desafío ahora es <strong>terminar</strong> — no perfeccionar. Un producto publicado imperfecto vende más que un prototipo perfecto guardado en casa.</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="show('estado', this)">
+    <span class="icon">📊</span>Estado
+  </button>
+  <button class="nav-btn" onclick="show('producto', this)">
+    <span class="icon">🕐</span>Producto
+  </button>
+  <button class="nav-btn" onclick="show('costos', this)">
+    <span class="icon">💰</span>Costos
+  </button>
+  <button class="nav-btn" onclick="show('ml', this)">
+    <span class="icon">🛒</span>ML
+  </button>
+  <button class="nav-btn" onclick="show('ig', this)">
+    <span class="icon">📸</span>IG
+  </button>
+  <button class="nav-btn" onclick="show('pasos', this)">
+    <span class="icon">🚀</span>Pasos
+  </button>
+</nav>
+
+<script>
+  function show(page, btn) {
+    document.querySelectorAll('.page').forEach(function(p) {
+      p.classList.remove('active');
+    });
+    document.querySelectorAll('.nav-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    document.getElementById('page-' + page).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
